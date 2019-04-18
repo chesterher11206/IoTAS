@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kafum5p^hb%ga9gj75e04%mz_h@os+x@qh!s7y$+2i%4#)#+eh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
+    'user',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+ASGI_APPLICATION = "mysite.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -119,3 +131,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/static_server')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/static_local'),)

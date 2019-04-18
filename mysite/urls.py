@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from mysite import settings
+from django.views.static import serve
 
 urlpatterns = [
+    path('static/<path:path>', serve, {'document_root':settings.STATIC_ROOT}),
     path('admin/', admin.site.urls),
+    path('user/', include('user.urls')),
     path('', include('dashboard.urls'))
 ]

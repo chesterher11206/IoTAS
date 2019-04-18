@@ -1,0 +1,27 @@
+{% extends 'user/user_base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div style="display:flex; margin-bottom: 20px;">
+        <div class="col-12 col-lg-3">
+            <img src="{% static 'images/fox.png' %}" class="head_photo">
+        </div>
+        <div class="col-12 col-lg-9" style="padding-left:0px;">
+            <h3>IoT Website</h3>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <form action="{% url 'sign_up' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <b>{{ field.label_tag }}</b>
+                <p>{{ field }}</p>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-sm btn-primary">Sign up</button>
+        </form>
+        <br>
+        <p>Already have an account? <a href="{% url 'log_in' %}">Log in!</a></p>
+    </div>
+{% endblock content %}

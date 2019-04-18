@@ -2,118 +2,1072 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="section" id="introduction">
-        <div class="container">
-            <div class="section-title">
-                <h3>Writer Introduction</h3>
-            </div>
-            <div class="testimonials owl-carousel">
-                <div class="testimonials-single">
-                    <img src="{% static 'images/me.jpg' %}" alt="client" class="client-img">
-                    <blockquote class="blockquote">
-                        Hi, everyone. Here is the Homework 1 Website.
-                        <br>
-                        In this site, you can find out some information about us, and you can also see how many visiters have visited here, and so far how many times they have visited.
-                        <br>
-                        And if you have something want to tell us, please leave the message right down on the board, Thank you!
-                    </blockquote>
-                    <h5 class="mt-4 mb-2">Chester Her</h5>
-                    <p class="text-primary">Taipei, Taiwan</p>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            {% if request.user.is_superuser %}
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" id="searchDevice" data-toggle="modal" data-target="#searchModal"><i class="fas fa-download fa-sm text-white-50"></i>Search</a>
+            {% endif %}
+        </div>
+
+        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Searching for Active Device</h5>
+                <button class="close stop_search" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body" id="search"></div>
+                <div class="modal-footer">
+                <button class="btn btn-secondary stop_search" type="button" data-dismiss="modal">Cancel</button>
+                <!-- <a class="btn btn-primary" href="{% url 'log_out' %}">Logout</a> -->
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="section light-bg" id="board">
-        <div class="container">
-            <div class="section-title">
-                <h3>Message Board</h3>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-12 col-lg-8">
-                    <ul class="nav nav-tabs nav-justified" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#all">All</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#yours">Yours</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active message_board" id="all">
-                            <div>
-                                <!-- {% for message in message_get %}
-                                    <div class="post">
-                                        <div class="col-12 col-lg-1 head_photo_area">
-                                            <img src="{% static message.get_photo_display %}" class="head_photo">
-                                        </div>
-                                        <div class="col-12 col-lg-10">
-                                            <h4><a href="">{{ message.name }}</a></h4>
-                                            <div class="date">
-                                                {{ message.published_time }}
-                                            </div>
-                                            <p>{{ message.text|linebreaksbr }}</p>
-                                        </div>
-                                        <div class="col-12 col-lg-1">
-                                            {% for msg_pk in message_del %}
-                                                {% if msg_pk == message.pk %}
-                                                    <a class="btn btn-default" href="{% url 'message_delete' pk=message.pk %}"><img src="{% static 'images/delete.png' %} " class="delete_icon"></a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% endfor %} -->
-                            </div>
-                        </div>
-                        <div class="tab-pane fade message_board" id="yours">
-                            <div>
-                                <!-- {% for message in message_get %}
-                                    {% for msg_pk in message_del %}
-                                        {% if msg_pk == message.pk %}
-                                            <div class="post">
-                                                <div class="col-12 col-lg-1 head_photo_area">
-                                                    <img src="{% static message.get_photo_display %}" class="head_photo">
-                                                </div>
-                                                <div class="col-12 col-lg-10">
-                                                    <h4><a href="">{{ message.name }}</a></h4>
-                                                    <div class="date">
-                                                        {{ message.published_time }}
-                                                    </div>
-                                                    <p>{{ message.text|linebreaksbr }}</p>
-                                                </div>
-                                                <div class="col-12 col-lg-1">
-                                                    <a class="btn btn-default" href="{% url 'message_delete' pk=message.pk %}"><img src="{% static 'images/delete.png' %}" class="delete_icon"></a>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %} -->
-                            </div>
-                        </div>
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 new_message">
-                    <h5>Leave a Message</h5>
-                    <!-- <form method="POST" class="post-form">{% csrf_token %}
-                        <p>{{ form.name.label }}</p>
-                        <p>{{ form.name }}</p>
-                        <p>{{ form.photo.label }}</p>
-                        <div class="row">
-                            {% for photo_index, photo_src in form.fields.photo.choices %}
-                                {% if forloop.counter0|divisibleby:3 %}
-                                    </div><div class="row"><div class="col-12 col-lg-1"><input type="checkbox" name="{{ form.photo.name }}" value="{{ photo_index }}"></div><div class="col-12 col-lg-3"><img src="{% static photo_src %}" class="head_photo"></div>
-                                {% else %}
-                                    <div class="col-12 col-lg-1"><input type="checkbox" name="{{ form.photo.name }}" value="{{ photo_index }}"></div><div class="col-12 col-lg-3"><img src="{% static photo_src %}" class="head_photo"></div>
-                                {% endif %}
-                            {% endfor %}
+                </div>
+            </div> -->
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                        <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
                         </div>
-                        <p>{{ form.text.label }}</p>
-                        <p>{{ form.text }}</p>
-                        <button type="submit" class="save btn btn-default">Save</button>
-                    </form> -->
+                        <div class="col">
+                            <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+            <!-- Pending Requests Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- Content Row -->
+
+        <div class="row">
+
+        <!-- Area Chart -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Select Sensor:</div>
+                        <!-- {% for info in infos %}
+                            <a class="dropdown-item" href="#">{{ info.uuid }}</a>
+                        {% endfor %} -->
+                            {% for sensor_name in sensor_list %}
+                                <a class="dropdown-item dropdown-sensor" href="#">{{ sensor_name }}</a>
+                            {% endfor %}
+                        <!-- <a class="dropdown-item" href="#">Temperature</a>
+                        <a class="dropdown-item" href="#">Humidity</a> -->
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-header">Select Device:</div>
+                            {% for info in infos %}
+                                <a class="dropdown-item active-display-device dropdown-device" href="#">{{ info.uuid }}</a>
+                            {% endfor %}
+                        <!-- <a class="dropdown-item" href="#">Light</a> -->
+                    </div>
                 </div>
             </div>
+            <!-- Card Body -->
+            <div class="card-body device-card">
+                <div class="chart-area">
+                    <!-- <canvas id="TemperatureChart" class="active-sensor-chart"></canvas>
+                    <canvas id="HumidityChart" class="sensor-chart"></canvas>
+                    <canvas id="LightChart" class="sensor-chart"></canvas> -->
+                    {% for sensor_name in sensor_list %}
+                        <!-- <div class="sensorChartWrapper"> -->
+                            {% if forloop.first %} 
+                                <canvas id="{{ sensor_name }}_SensorChart" class="active-sensor-chart"></canvas>
+                            {% else %}
+                                <canvas id="{{ sensor_name }}_SensorChart" class="sensor-chart"></canvas>
+                            {% endif %}
+                        <!-- </div> -->
+                    {% endfor %}
+                <!-- <canvas id="myAreaChart"></canvas> -->
+                </div>
+            </div>
+            </div>
         </div>
+
+        <!-- Pie Chart -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#online"><h6 class="m-0 font-weight-bold text-primary">Online</h6></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#offline"><h6 class="m-0 font-weight-bold text-primary">Offline</h6></a>
+                </li>
+            </ul>
+            <div class="card-body device-card tab-content">
+                <div class="tab-pane fade show active device-list" id="online">
+                    <!-- <div> -->
+                        {% for info in infos %}
+                            {% if info.online == True %}
+                                <div class="post" id="{{ info.uuid }}_online">
+                                    <div class="col-12 col-lg-1 device_photo_area">
+                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                    </div>
+                                    {% if request.user.is_superuser %}
+                                        <div class="col-12 col-lg-9 device_info_area">
+                                            <p class="device-title">{{ info.uuid }}</p>
+                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                        </div>
+                                    {% else %}
+                                        <div class="col-12 col-lg-11 device_info_area">
+                                            <p class="device-title">{{ info.uuid }}</p>
+                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                        </div>
+                                    {% endif %}
+                                    {% if request.user.is_superuser %}
+                                        <div class="col-12 col-lg-1 device_action_area">
+                                            <a class="device_add btn btn-default" id="{{ info.uuid }}_add" href="#"><img src="{% static 'images/add.png' %} " class="action_icon"></a>
+                                        </div>
+                                        <div class="col-12 col-lg-1 device_action_area">
+                                            <a class="device_delete btn btn-default" id="{{ info.uuid }}_delete" href="#"><img src="{% static 'images/delete.png' %} " class="action_icon"></a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    <!-- </div> -->
+                </div>
+                <div class="tab-pane fade device-list" id="offline">
+                    <!-- <div> -->
+                        {% for info in infos %}
+                            {% if info.online == False %}
+                                <div class="post" id="{{ info.uuid }}_offline">
+                                    <div class="col-12 col-lg-1 device_photo_area">
+                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                    </div>
+                                    <div class="col-12 col-lg-11 device_info_area">
+                                        <p class="device-title">{{ info.uuid }}</p>
+                                        <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    <!-- </div> -->
+                </div>
+            </div>
+            <!-- Card Header - Dropdown -->
+            <!-- <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-header">Dropdown Header:</div>
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+                </div>
+            </div> -->
+            <!-- Card Body -->
+            <!-- <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                <canvas id="myPieChart"></canvas>
+                </div>
+                <div class="mt-4 text-center small">
+                <span class="mr-2">
+                    <i class="fas fa-circle text-primary"></i> Direct
+                </span>
+                <span class="mr-2">
+                    <i class="fas fa-circle text-success"></i> Social
+                </span>
+                <span class="mr-2">
+                    <i class="fas fa-circle text-info"></i> Referral
+                </span>
+                </div>
+            </div> -->
+            </div>
+        </div>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-6 mb-4">
+
+            <!-- Project Card Example -->
+            <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+            </div>
+            <div class="card-body">
+                <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
+                <div class="progress mb-4">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
+                <div class="progress mb-4">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
+                <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
+                <div class="progress mb-4">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
+                <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Color System -->
+            <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-primary text-white shadow">
+                <div class="card-body">
+                    Primary
+                    <div class="text-white-50 small">#4e73df</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    Success
+                    <div class="text-white-50 small">#1cc88a</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-info text-white shadow">
+                <div class="card-body">
+                    Info
+                    <div class="text-white-50 small">#36b9cc</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-warning text-white shadow">
+                <div class="card-body">
+                    Warning
+                    <div class="text-white-50 small">#f6c23e</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    Danger
+                    <div class="text-white-50 small">#e74a3b</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-secondary text-white shadow">
+                <div class="card-body">
+                    Secondary
+                    <div class="text-white-50 small">#858796</div>
+                </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 mb-4">
+
+            <!-- Illustrations -->
+            <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/undraw_posting_photo.svg" alt="">
+                </div>
+                <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
+                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
+            </div>
+            </div>
+
+            <!-- Approach -->
+            <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
+            </div>
+            <div class="card-body">
+                <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
+                <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
+            </div>
+            </div>
+
+        </div>
+        </div>
+
     </div>
-{% endblock %}
+{% endblock content %}
+
+{% block script %}
+    <script>
+        var is_superuser = "{{ request.user.is_superuser }}";
+        console.log(is_superuser);
+        // Get Device Info, Online, Offline
+        var infoRoomName = "info";
+        var displayInfoSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + infoRoomName + '/');
+        
+        displayInfoSocket.onopen = function open() {
+            console.log('DisplayInfoSocket connection created.');
+        };
+
+        displayInfoSocket.onclose = function(e) {
+            console.error('DisplayInfoSocket closed unexpectedly');
+        };
+
+        displayInfoSocket.onmessage = function(e) {
+            console.log('DisplayInfoSocket get message.');
+            var data = JSON.parse(e.data);
+            var info = data['message'];
+            if (info['message'] == 'Display Data') {
+                if (info['online']) {
+                    if (document.getElementById(info['uuid'] + '_offline')) {
+                        document.getElementById(info['uuid'] + '_offline').remove();
+                    }
+                    if (!document.getElementById(info['uuid'] + '_online')) {
+                        updateDeviceStatus(info, 'online');
+                    }
+                    // var update_data = ['55', '63'];
+                    // updateSensorChart('August', update_data, info['uuid']);
+                }
+                else {
+                    if (document.getElementById(info['uuid'] + '_online')) {
+                        document.getElementById(info['uuid'] + '_online').remove();
+                    }
+                    if (!document.getElementById(info['uuid'] + '_offline')) {
+                        updateDeviceStatus(info, 'offline');
+                    }
+                }
+            }
+            if (document.getElementById(info['uuid'] + "_search")) {
+                document.getElementById(info['uuid'] + "_search").remove();
+            }
+        };
+
+        if (displayInfoSocket.readyState == WebSocket.OPEN) {
+            displayInfoSocket.onopen();
+        };
+
+        // Update Device Status
+        function updateDeviceStatus(info, status) {
+            console.log(status);
+            console.log(info);
+            var myDiv = document.createElement("DIV");
+            myDiv.setAttribute('id', info['uuid'] + '_' + status);
+            myDiv.setAttribute('class', 'post');
+
+            var headPhotoDiv = document.createElement("DIV");
+            headPhotoDiv.setAttribute('class', 'col-12 col-lg-1 device_photo_area');
+            var headPhotoImage = document.createElement("IMG");
+            headPhotoImage.setAttribute('class', 'head_photo');
+            headPhotoImage.setAttribute('src', "{% static 'images/fox.png' %}");
+            headPhotoDiv.appendChild(headPhotoImage);
+
+            if (is_superuser == "False" || status == "offline"){
+                var infoDiv = document.createElement("DIV");
+                infoDiv.setAttribute('class', 'col-12 col-lg-11 device_info_area');
+                var deviceUuid = document.createElement("p");
+                deviceUuid.setAttribute('class', 'device-title');
+                deviceUuid.innerHTML = info['uuid'];
+                var deviceInfo = document.createElement("p");
+                deviceInfo.setAttribute('class', 'device-info');
+                deviceInfo.innerHTML = info['host'] + "|" + info['os_name'];
+                infoDiv.appendChild(deviceUuid);
+                infoDiv.appendChild(deviceInfo);
+
+                myDiv.appendChild(headPhotoDiv);
+                myDiv.appendChild(infoDiv);
+            }
+            else {
+                if (status == "online") {
+                    var infoDiv = document.createElement("DIV");
+                    infoDiv.setAttribute('class', 'col-12 col-lg-9 device_info_area');
+                    var deviceUuid = document.createElement("p");
+                    deviceUuid.setAttribute('class', 'device-title');
+                    deviceUuid.innerHTML = info['uuid'];
+                    var deviceInfo = document.createElement("p");
+                    deviceInfo.setAttribute('class', 'device-info');
+                    deviceInfo.innerHTML = info['host'] + "|" + info['os_name'];
+                    infoDiv.appendChild(deviceUuid);
+                    infoDiv.appendChild(deviceInfo);
+
+                    var addDiv = document.createElement("DIV");
+                    addDiv.setAttribute('class', 'col-12 col-lg-1 device_action_area');
+                    var addImage = document.createElement("IMG");
+                    var addLink = document.createElement("a");
+                    addImage.setAttribute('class', "action_icon");
+                    addImage.setAttribute('src', "{% static 'images/add.png' %}");
+                    addLink.setAttribute('class', 'device_add btn btn-default');
+                    addLink.setAttribute('id', info['uuid'] + '_add');
+                    addLink.appendChild(addImage);
+                    addDiv.appendChild(addLink);
+
+                    var deleteDiv = document.createElement("DIV");
+                    deleteDiv.setAttribute('class', 'col-12 col-lg-1 device_action_area');
+                    var deleteImage = document.createElement("IMG");
+                    var deleteLink = document.createElement("a");
+                    deleteImage.setAttribute('class', "action_icon");
+                    deleteImage.setAttribute('src', "{% static 'images/delete.png' %}");
+                    deleteLink.setAttribute('class', 'device_delete btn btn-default');
+                    deleteLink.setAttribute('id', info['uuid'] + '_delete');
+                    deleteLink.appendChild(deleteImage);
+                    deleteDiv.appendChild(deleteLink);
+
+                    myDiv.appendChild(headPhotoDiv);
+                    myDiv.appendChild(infoDiv);
+                    myDiv.appendChild(addDiv);
+                    myDiv.appendChild(deleteDiv);
+                }
+                else if (status == "search") {
+                    var infoDiv = document.createElement("DIV");
+                    infoDiv.setAttribute('class', 'col-12 col-lg-10 device_info_area');
+                    var deviceUuid = document.createElement("p");
+                    deviceUuid.setAttribute('class', 'device-title');
+                    deviceUuid.innerHTML = info['uuid'];
+                    var deviceInfo = document.createElement("p");
+                    deviceInfo.setAttribute('class', 'device-info');
+                    deviceInfo.innerHTML = info['host'] + "|" + info['os_name'];
+                    infoDiv.appendChild(deviceUuid);
+                    infoDiv.appendChild(deviceInfo);
+
+                    var allowDiv = document.createElement("DIV");
+                    allowDiv.setAttribute('class', 'col-12 col-lg-1 device_action_area');
+                    var allowImage = document.createElement("IMG");
+                    var allowLink = document.createElement("button");
+                    allowImage.setAttribute('class', "action_icon");
+                    allowImage.setAttribute('src', "{% static 'images/add.png' %}");
+                    allowLink.setAttribute('class', 'device_allow btn btn-default');
+                    allowLink.setAttribute('id', info['uuid'] + '_allow');
+                    allowLink.setAttribute('type', 'button');
+                    allowLink.appendChild(allowImage);
+                    allowDiv.appendChild(allowLink);
+
+                    myDiv.appendChild(headPhotoDiv);
+                    myDiv.appendChild(infoDiv);
+                    myDiv.appendChild(allowDiv);
+                }
+            }
+            document.getElementById(status).appendChild(myDiv);
+        };
+
+        // Get Device Sensor: Temperature, Humidity, Light
+        var sensorRoomName = "sensor";
+        var displaySensorSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + sensorRoomName + '/');
+        
+        displaySensorSocket.onopen = function open() {
+            console.log('DisplaySensorSocket connection created.');
+        };
+
+        displaySensorSocket.onclose = function(e) {
+            console.error('DisplaySensorSocket closed unexpectedly');
+        };
+
+        displaySensorSocket.onmessage = function(e) {
+            console.log('DisplaySensorSocket get message.');
+            var data = JSON.parse(e.data);
+            var sensor = data['message'];
+            if (sensor['message'] == "Display Sensor") {
+                updateSensorChart(sensor);
+            }
+        };
+
+        if (displaySensorSocket.readyState == WebSocket.OPEN) {
+            displaySensorSocket.onopen();
+        };
+
+        // Draw Sensor Chart
+        // chart_relabel();
+        window.SensorChartList = {};
+        var sensor_datasets = JSON.parse('{{sensor_dataset|safe}}');
+        for (var sensor_name in sensor_datasets) {
+            createSensorChart(sensor_name, sensor_datasets[sensor_name]);
+        }
+        $(".sensor-chart").hide();
+
+        // Chart of Device Sensor
+        function createSensorChart(sensor_name, sensor_dataset) {
+            var chart_datasets = [];
+            for (var key in sensor_dataset) {
+                var i;
+                var chart_data = [];
+                for (i = 0; i < sensor_dataset[key].length; i++) {
+                    chart_data.push({x: Number(sensor_dataset[key][i][0]) * 1000, y: sensor_dataset[key][i][1]});
+                }
+                var color = Chart.helpers.color;
+                var colour = hexToRgbA('#' + intToARGB(hashCode(sensor_name + key)));
+                console.log(colour);
+                var chart_dataset = {
+                    label: key,
+                    hidden: false,
+                    fillColor: color(colour).alpha(0.5).rgbString(),
+                    strokeColor: colour,
+                    pointColor: colour,
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: colour,
+					backgroundColor: color(colour).alpha(0.5).rgbString(),
+					borderColor: colour,
+					type: 'line',
+					pointRadius: 0,
+					fill: false,
+					lineTension: 0,
+					borderWidth: 2,
+                    data: chart_data,
+                };
+                chart_datasets.push(chart_dataset);
+            }
+            var lineChartData = {datasets: chart_datasets};
+            
+            var ctx = document.getElementById(sensor_name + '_SensorChart');
+            var myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: lineChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            distribution: 'series',
+                            time: {
+                                // unit: 'hours',
+                                // unitStepSize: 1,
+                                displayFormats: {
+                                    quarter: 'YY/MM/DD HH:mm:ss',
+                                },
+                            },
+                            ticks: {
+                                source:'labels',
+                                userCallback: function(label, index, labels) {
+                                    return moment(label).format("YY/MM/DD HH:mm:ss");
+                                }
+                            },
+                            // time: {
+                            // unit: 'date'
+                            // },
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2],
+                                // display: false,
+                                // drawBorder: false,
+                            },
+                            // ticks: {
+                            // maxTicksLimit: 7
+                            // }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                stepSize: 0.1,
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return value;
+                                }
+                            },
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            boxWidth: 8,
+                            padding: 20,
+                            fontColor: 'rgb(255, 99, 132)'
+                        }
+                    },
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        titleMarginBottom: 10,
+                        titleFontColor: '#6e707e',
+                        titleFontSize: 14,
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        intersect: false,
+                        mode: 'index',
+                        caretPadding: 10,
+                        callbacks: {
+                            label: function(tooltipItem, chart) {
+                                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                return datasetLabel + ': ' + tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    // animation:{
+                    //     onComplete : function(){
+
+                    //     }
+                    // }
+    
+                }
+            });
+            window.SensorChartList[sensor_name] = myLineChart;   
+        }
+
+        // Update Sensor Chart
+        function updateSensorChart(sensor) {
+            sensor_name = sensor['sensor_name'];
+            uuid = sensor['uuid'];
+            value = sensor['value'];
+            ts = Number(sensor['timestamp']) * 1000;
+            var index;
+            for (var i = 0; i < window.SensorChartList[sensor_name].data.datasets.length; i++) {
+                if (window.SensorChartList[sensor_name].data.datasets[i].label == uuid) {
+                    index = i;
+                    break;
+                }
+            }
+            var new_data = {x: ts, y: value};
+            if (!window.SensorChartList[sensor_name].data.datasets[index].data.some(e => e.x == ts)) {
+                window.SensorChartList[sensor_name].data.datasets[index].data.push(new_data);
+                window.SensorChartList[sensor_name].update();
+                chart_resize();
+            }
+        }
+
+        // Search Device
+        var searchRoomName = "search";
+        var searchDeviceSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + searchRoomName + '/');
+        
+        searchDeviceSocket.onopen = function open() {
+            console.log('SearchDeviceSocket connection created.');
+        };
+
+        searchDeviceSocket.onclose = function(e) {
+            console.error('SearchDeviceSocket closed unexpectedly');
+        };
+
+        searchDeviceSocket.onmessage = function(e) {
+            console.log('SearchDeviceSocket get message.');
+            var data = JSON.parse(e.data);
+            var search = data['message'];
+            if (search['message'] == 'Find Device') {
+                if (!document.getElementById(search['uuid'] + "_search")) {
+                    updateDeviceStatus(search, 'search');
+                }
+            }
+        };
+
+        if (searchDeviceSocket.readyState == WebSocket.OPEN) {
+            searchDeviceSocket.onopen();
+        };
+
+        // Select Display Sensor
+        $('a.dropdown-sensor').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                $('.active-sensor-chart').hide();
+                var i, old_active
+                old_active = document.getElementsByClassName("active-sensor-chart");
+                for (i = 0; i < old_active.length; i++) {
+                    var classname = old_active[i].className;
+                    classname = classname.replace("active-sensor-chart", "sensor-chart");
+                    old_active[i].className = classname;
+                }
+                var clickSensor = event.currentTarget.text + "_SensorChart";
+                var new_active = document.getElementById(clickSensor);
+                var classname = new_active.className;
+                classname = classname.replace("sensor-chart", "active-sensor-chart");
+                new_active.className = classname;
+
+                $('.active-sensor-chart').show();
+                $(".sensor-chart").hide();
+            }
+        });
+
+        // Select Display Device
+        $('a.dropdown-device').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var click_device = event.currentTarget.text;
+                var active_sensor = document.getElementsByClassName("active-sensor-chart")[0].id.replace('_SensorChart', '');
+                var index;
+                console.log(active_sensor);
+                for (var i = 0; i < window.SensorChartList[active_sensor].data.datasets.length; i++) {
+                    if (window.SensorChartList[active_sensor].data.datasets[i].label == click_device) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                var classList = event.currentTarget.classList;
+                console.log(classList);
+                var is_hide = window.SensorChartList[active_sensor].data.datasets[index].hidden;
+                if (is_hide) {
+                    window.SensorChartList[active_sensor].data.datasets[index].hidden = false;
+                    if (classList.contains("non-display-device")) {
+                        event.currentTarget.classList.add("active-display-device");
+                        event.currentTarget.classList.remove("non-display-device");
+                    }
+                }
+                else {
+                    window.SensorChartList[active_sensor].data.datasets[index].hidden = true;
+                    if (classList.contains("active-display-device")) {
+                        event.currentTarget.classList.add("non-display-device");
+                        event.currentTarget.classList.remove("active-display-device");
+                    }
+                }
+                window.SensorChartList[active_sensor].update();
+                chart_resize();
+            }
+        });
+
+        $('a#searchDevice').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var msg = {"message": "Search Device"};
+                searchDeviceSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('.stop_search').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                console.log("stop search")
+                var msg = {"message": "Stop Search Device"};
+                searchDeviceSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('.device_delete').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = event.currentTarget.id.replace('_delete', '');
+                var msg = {"message": "Delete Device", 'uuid': device_uuid};
+                displayInfoSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('.device_add').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = event.currentTarget.id.replace('_add', '');
+                var msg = {"message": "Add Device", 'uuid': device_uuid};
+                console.log(msg)
+                displayInfoSocket.send(JSON.stringify({
+                    'message': msg,
+                }));
+            }
+        });
+
+        $(document).on("click", ".device_allow", function(event){
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = event.currentTarget.id.replace('_allow', '');
+                console.log(device_uuid);
+                var msg = {"message": "Allow Device", 'uuid': device_uuid};
+                displayInfoSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        // Resize Chart
+        window.onload = function() {
+            chart_resize();
+        }
+
+        function hashCode(str) {
+            var hash = 0;
+            for (var i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return hash;
+        }
+
+        function intToARGB(i) {
+            var hex = ((i>>24)&0xFF).toString(16) +
+                    ((i>>16)&0xFF).toString(16) +
+                    ((i>>8)&0xFF).toString(16) +
+                    (i&0xFF).toString(16);
+            hex += '000000';
+            return hex.substring(0, 6);
+        }
+
+        function hexToRgbA(hex){
+            var c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c= hex.substring(1).split('');
+                if(c.length== 3){
+                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c= '0x'+c.join('');
+                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+            }
+            throw new Error('Bad Hex');
+        }
+
+        function chart_resize() {
+            for (var sensor_name in sensor_datasets) {
+                var adjusted_width = 0;
+                for (var key in sensor_datasets[sensor_name]) {
+                    if (sensor_datasets[sensor_name][key].length * 2 > adjusted_width) {
+                        adjusted_width = sensor_datasets[sensor_name][key].length * 2;
+                    }
+
+                }
+                if ($('#' + sensor_name + '_SensorChart').width() < adjusted_width) {
+                    $('#' + sensor_name + '_SensorChart').width(adjusted_width);
+                }
+            }
+        }
+
+        function chart_relabel() {
+            Chart.pluginService.register({
+                afterUpdate: function (chart) {
+                    var xScale = chart.scales['x-axis-0'];
+                    if (xScale.options.ticks.maxTicksLimit) {
+                        // store the original maxTicksLimit
+                        xScale.options.ticks._maxTicksLimit = xScale.options.ticks.maxTicksLimit;
+                        // let chart.js draw the first and last label
+                        xScale.options.ticks.maxTicksLimit = (xScale.ticks.length % xScale.options.ticks._maxTicksLimit === 0) ? 1 : 2;
+
+                        var originalXScaleDraw = xScale.draw
+                        xScale.draw = function () {
+                            originalXScaleDraw.apply(this, arguments);
+
+                            var xScale = chart.scales['x-axis-0'];
+                            if (xScale.options.ticks.maxTicksLimit) {
+                                var helpers = Chart.helpers;
+
+                                var tickFontColor = helpers.getValueOrDefault(xScale.options.ticks.fontColor, Chart.defaults.global.defaultFontColor);
+                                var tickFontSize = helpers.getValueOrDefault(xScale.options.ticks.fontSize, Chart.defaults.global.defaultFontSize);
+                                var tickFontStyle = helpers.getValueOrDefault(xScale.options.ticks.fontStyle, Chart.defaults.global.defaultFontStyle);
+                                var tickFontFamily = helpers.getValueOrDefault(xScale.options.ticks.fontFamily, Chart.defaults.global.defaultFontFamily);
+                                var tickLabelFont = helpers.fontString(tickFontSize, tickFontStyle, tickFontFamily);
+                                var tl = xScale.options.gridLines.tickMarkLength;
+
+                                var isRotated = xScale.labelRotation !== 0;
+                                var yTickStart = xScale.top;
+                                var yTickEnd = xScale.top + tl;
+                                var chartArea = chart.chartArea;
+
+                                // use the saved ticks
+                                var maxTicks = xScale.options.ticks._maxTicksLimit - 1;
+                                var ticksPerVisibleTick = xScale.ticks.length / maxTicks;
+
+                                // chart.js uses an integral skipRatio - this causes all the fractional ticks to be accounted for between the last 2 labels
+                                // we use a fractional skipRatio
+                                var ticksCovered = 0;
+                                helpers.each(xScale.ticks, function (label, index) {
+                                    if (index < ticksCovered)
+                                        return;
+
+                                    ticksCovered += ticksPerVisibleTick;
+
+                                    // chart.js has already drawn these 2
+                                    if (index === 0 || index === (xScale.ticks.length - 1))
+                                        return;
+
+                                    // copy of chart.js code
+                                    var xLineValue = this.getPixelForTick(index);
+                                    var xLabelValue = this.getPixelForTick(index, this.options.gridLines.offsetGridLines);
+
+                                    if (this.options.gridLines.display) {
+                                        this.ctx.lineWidth = this.options.gridLines.lineWidth;
+                                        this.ctx.strokeStyle = this.options.gridLines.color;
+
+                                        xLineValue += helpers.aliasPixel(this.ctx.lineWidth);
+
+                                        // Draw the label area
+                                        this.ctx.beginPath();
+
+                                        if (this.options.gridLines.drawTicks) {
+                                            this.ctx.moveTo(xLineValue, yTickStart);
+                                            this.ctx.lineTo(xLineValue, yTickEnd);
+                                        }
+
+                                        // Draw the chart area
+                                        if (this.options.gridLines.drawOnChartArea) {
+                                            this.ctx.moveTo(xLineValue, chartArea.top);
+                                            this.ctx.lineTo(xLineValue, chartArea.bottom);
+                                        }
+
+                                        // Need to stroke in the loop because we are potentially changing line widths & colours
+                                        this.ctx.stroke();
+                                    }
+
+                                    if (this.options.ticks.display) {
+                                        this.ctx.save();
+                                        this.ctx.translate(xLabelValue + this.options.ticks.labelOffset, (isRotated) ? this.top + 12 : this.options.position === "top" ? this.bottom - tl : this.top + tl);
+                                        this.ctx.rotate(helpers.toRadians(this.labelRotation) * -1);
+                                        this.ctx.font = tickLabelFont;
+                                        this.ctx.textAlign = (isRotated) ? "right" : "center";
+                                        this.ctx.textBaseline = (isRotated) ? "middle" : this.options.position === "top" ? "bottom" : "top";
+                                        this.ctx.fillText(label, 0, 0);
+                                        this.ctx.restore();
+                                    }
+                                }, xScale);
+                            }
+                        };
+                    }
+                },
+            });
+        }
+
+        // var defaults = {
+        //     scaleStartValue :null,     // Y 轴的起始值
+        //     scaleLineColor : "rgba(0,0,0,.1)",    // Y/X轴的颜色
+        //     scaleLineWidth : 1,        // X,Y轴的宽度
+        //     scaleShowLabels : true,    // 刻度是否显示标签, 即Y轴上是否显示文字   
+        //     scaleLabel : "<%=value%>", // Y轴上的刻度,即文字  
+        //     scaleFontFamily : "'Arial'",  // 字体  
+        //     scaleFontSize : 20,        // 文字大小 
+        //     scaleFontStyle : "normal",  // 文字样式  
+        //     scaleFontColor : "#666",    // 文字颜色  
+        //     scaleShowGridLines : true,   // 是否显示网格  
+        //     scaleGridLineColor : "rgba(0,0,0,.05)",   // 网格颜色
+        //     scaleGridLineWidth : 2,      // 网格宽度  
+        //     bezierCurve : false,         // 是否使用贝塞尔曲线? 即:线条是否弯曲     
+        //     pointDot : true,             // 是否显示点数  
+        //     pointDotRadius : 8,          // 圆点的大小  
+        //     pointDotStrokeWidth : 1,     // 圆点的笔触宽度, 即:圆点外层边框大小 
+        //     datasetStroke : true,        // 数据集行程
+        //     datasetStrokeWidth : 2,      // 线条的宽度, 即:数据集
+        //     datasetFill : false,         // 是否填充数据集 
+        //     animation : true,            // 是否执行动画  
+        //     animationSteps : 60,          // 动画的时间   
+        //     animationEasing : "easeOutQuart",    // 动画的特效   
+        //     onAnimationComplete : null    // 动画完成时的执行函数   
+        // }; 
+    </script>
+{% endblock script %}

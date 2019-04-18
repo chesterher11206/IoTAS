@@ -1,0 +1,199 @@
+{% extends 'dashboard/base2.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="section" id="introduction">
+        <div class="container">
+            <div class="section-title">
+                <h3>Writer Introduction</h3>
+            </div>
+            <div class="testimonials owl-carousel">
+                <div class="testimonials-single">
+                    <img src="{% static 'images/me.jpg' %}" alt="client" class="client-img">
+                    <blockquote class="blockquote">
+                    </blockquote>
+                    <h5 class="mt-4 mb-2">Chester Her</h5>
+                    <p class="text-primary">Taipei, Taiwan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section light-bg" id="board">
+        <div class="container">
+            <div class="section-title">
+                <h3>Message Board</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#online">Online</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#offline">Offline</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active message_board" id="online">
+                            <div>
+                                {% for info in infos %}
+                                    {% if info.online == True %}
+                                        <div class="post" id="{{ info.uuid }}_online">
+                                            <div class="col-12 col-lg-1 head_photo_area">
+                                                <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                            </div>
+                                            <div class="col-12 col-lg-11">
+                                                <h4>{{ info.uuid }}</h4>
+                                                <p>{{ info.host }}</p>
+                                                <p>{{ info.os_name }}</p>
+                                            </div>
+                                            <!-- <div class="col-12 col-lg-1">
+                                                {% for msg_pk in message_del %}
+                                                    {% if msg_pk == message.pk %}
+                                                        <a class="btn btn-default" href="{% url 'message_delete' pk=message.pk %}"><img src="{% static 'images/delete.png' %} " class="delete_icon"></a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div> -->
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade message_board" id="offline">
+                            <div>
+                                {% for info in infos %}
+                                    {% if info.online == False %}
+                                        <div class="post" id="{{ info.uuid }}_offline">
+                                            <div class="col-12 col-lg-1 head_photo_area">
+                                                <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                            </div>
+                                            <div class="col-12 col-lg-11">
+                                                <h4>{{ info.uuid }}</h4>
+                                                <p>{{ info.host }}</p>
+                                                <p>{{ info.os_name }}</p>
+                                            </div>
+                                            <!-- <div class="col-12 col-lg-1">
+                                                {% for msg_pk in message_del %}
+                                                    {% if msg_pk == message.pk %}
+                                                        <a class="btn btn-default" href="{% url 'message_delete' pk=message.pk %}"><img src="{% static 'images/delete.png' %} " class="delete_icon"></a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div> -->
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 new_message">
+                    <h5>Leave a Message</h5>
+                    <!-- <form method="POST" class="post-form">{% csrf_token %}
+                        <p>{{ form.name.label }}</p>
+                        <p>{{ form.name }}</p>
+                        <p>{{ form.photo.label }}</p>
+                        <div class="row">
+                            {% for photo_index, photo_src in form.fields.photo.choices %}
+                                {% if forloop.counter0|divisibleby:3 %}
+                                    </div><div class="row"><div class="col-12 col-lg-1"><input type="checkbox" name="{{ form.photo.name }}" value="{{ photo_index }}"></div><div class="col-12 col-lg-3"><img src="{% static photo_src %}" class="head_photo"></div>
+                                {% else %}
+                                    <div class="col-12 col-lg-1"><input type="checkbox" name="{{ form.photo.name }}" value="{{ photo_index }}"></div><div class="col-12 col-lg-3"><img src="{% static photo_src %}" class="head_photo"></div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p>{{ form.text.label }}</p>
+                        <p>{{ form.text }}</p>
+                        <button type="submit" class="save btn btn-default">Save</button>
+                    </form> -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        var roomName = "info";
+        var displaySocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + roomName + '/');
+        
+        displaySocket.onopen = function open() {
+            console.log('DisplaySockets connection created.');
+        };
+
+        displaySocket.onclose = function(e) {
+            console.error('DisplaySocket closed unexpectedly');
+        };
+
+        displaySocket.onmessage = function(e) {
+            console.log('DisplaySockets get message.');
+            var data = JSON.parse(e.data);
+            var info = JSON.parse(data['message']);
+            if (info['online']) {
+                if (document.getElementById(info['uuid'] + '_offline')) {
+                    document.getElementById(info['uuid'] + '_offline').remove();
+                }
+                if (!document.getElementById(info['uuid'] + '_online')) {
+                    updateStatus(info, 'online');
+                }
+            }
+            else {
+                if (document.getElementById(info['uuid'] + '_online')) {
+                    document.getElementById(info['uuid'] + '_online').remove();
+                }
+                if (!document.getElementById(info['uuid'] + '_offline')) {
+                    updateStatus(info, 'offline');
+                }
+            }
+            // var i;
+            // var text = "";
+            // for (var key in info) {
+            //     text += key + ": " + info[key] + " ";
+            // }
+            // text += "<br>";
+            // for (i = 0; i < infos.length; i++) {
+            //     for (var key in infos[i]) {
+            //         text += key + ": " + infos[i][key] + " ";
+            //     }
+            //     text += "<br>";
+            // }
+            // document.querySelector('#display_zone').innerHTML += text;
+        };
+
+        if (displaySocket.readyState == WebSocket.OPEN) {
+            displaySocket.onopen();
+        }
+
+        function updateStatus(info, status) {
+            var myDiv = document.createElement("DIV");
+            myDiv.setAttribute('id', info['uuid'] + '_' + status);
+            myDiv.setAttribute('class', 'post');
+
+            var headPhotoDiv = document.createElement("DIV");
+            headPhotoDiv.setAttribute('class', 'col-12 col-lg-1 head_photo_area');
+            var headPhotoImage = document.createElement("IMG");
+            headPhotoImage.setAttribute('class', 'head_photo');
+            headPhotoImage.setAttribute('src', "{% static 'images/fox.png' %}");
+            headPhotoDiv.appendChild(headPhotoImage);
+
+            var infoDiv = document.createElement("DIV");
+            infoDiv.setAttribute('class', 'col-12 col-lg-11');
+            var uuidTitle = document.createElement("h4");
+            uuidTitle.innerHTML = info['uuid'];
+            var hostP = document.createElement("p");
+            hostP.innerHTML = info['host'];
+            var osnameP = document.createElement("p");
+            osnameP.innerHTML = info['os_name'];
+            infoDiv.appendChild(uuidTitle);
+            infoDiv.appendChild(hostP);
+            infoDiv.appendChild(osnameP);
+
+            myDiv.appendChild(headPhotoDiv);
+            myDiv.appendChild(infoDiv);
+
+            document.getElementById(status).appendChild(myDiv);
+        }
+    </script>
+{% endblock script %}
