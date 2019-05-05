@@ -59,12 +59,12 @@ class DisplayConsumer(AsyncWebsocketConsumer):
 
     async def search_device(self, event):
         msg_json = event['message']
-        if isinstance(msg_json, str):
-            msg_json = json.loads(msg_json)
-        print ("search", msg_json)
-        info = msg_json['message']
+        # if isinstance(msg_json, str):
+        #     msg_json = json.loads(msg_json)
+        # print ("search", msg_json)
+        # info = msg_json['message']
         from .mqtt import pub_client
-        pub_client.publish ("server/search/info", payload=info, qos=0)
+        pub_client.publish ("server/search/info", payload=json.dumps(msg_json), qos=0)
 
     async def find_device(self, event):
         print ("Find Device!!!")
@@ -83,9 +83,9 @@ class DisplayConsumer(AsyncWebsocketConsumer):
         device_exist = DeviceInfo.objects.filter(uuid=uuid)
 
         if device_exist and device_exist[0].online:
-            info = "Delete Device " + msg_json['uuid']
+            # info = "Delete Device " + msg_json['uuid']
             from .mqtt import pub_client
-            pub_client.publish("server/delete/info", payload=info, qos=0)
+            pub_client.publish("server/delete/info", payload=json.dumps(msg_json), qos=0)
 
     async def add_device(self, event):
         msg_json = event['message']
@@ -95,23 +95,21 @@ class DisplayConsumer(AsyncWebsocketConsumer):
         device_exist = DeviceInfo.objects.filter(uuid=uuid)
 
         if device_exist and device_exist[0].online:
-            info = "Add Device " + msg_json['uuid']
-            print (info)
+            # info = "Add Device " + msg_json['uuid']
             from .mqtt import pub_client
-            pub_client.publish("server/add/info", payload=info, qos=0)
+            pub_client.publish("server/add/info", payload=json.dumps(msg_json), qos=0)
 
     async def allow_device(self, event):
         msg_json = event['message']
         if isinstance(msg_json, str):
             msg_json = json.loads(msg_json)
-        print (type(msg_json))
         uuid = msg_json['uuid']
         device_exist = DeviceInfo.objects.filter(uuid=uuid)
 
         if not device_exist:
-            info = "Allow Device " + msg_json['uuid']
+            # info = "Allow Device " + msg_json['uuid']
             from .mqtt import pub_client
-            pub_client.publish("server/allow/info", payload=info, qos=0)
+            pub_client.publish("server/allow/info", payload=json.dumps(msg_json), qos=0)
 
 
 class SearchConsumer(AsyncWebsocketConsumer):

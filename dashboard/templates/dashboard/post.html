@@ -731,6 +731,7 @@
             var new_data = {x: ts, y: value};
             if (!window.SensorChartList[sensor_name].data.datasets[index].data.some(e => e.x == ts)) {
                 window.SensorChartList[sensor_name].data.datasets[index].data.push(new_data);
+                window.SensorChartList[sensor_name].data.datasets[index].data.shift();
                 window.SensorChartList[sensor_name].update();
                 chart_resize();
             }
