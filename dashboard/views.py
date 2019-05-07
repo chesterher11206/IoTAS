@@ -12,9 +12,13 @@ def dashboard(request):
     humidity = dict();
     light = dict();
     for info in infos:
-        temperature[info.uuid] = [[t.timestamp, t.value] for t in DeviceTemperature.objects.filter(uuid=info.uuid).order_by('timestamp')[-10:]]
-        humidity[info.uuid] = [[h.timestamp, h.value] for h in DeviceHumidity.objects.filter(uuid=info.uuid).order_by('timestamp')[-10:]]
-        light[info.uuid] = [[l.timestamp, l.value] for l in DeviceLight.objects.filter(uuid=info.uuid).order_by('timestamp')[-10:]]
+        temp_t = [[t.timestamp, t.value] for t in DeviceTemperature.objects.filter(uuid=info.uuid).order_by('timestamp')]
+        temp_h = [[h.timestamp, h.value] for h in DeviceHumidity.objects.filter(uuid=info.uuid).order_by('timestamp')]
+        temp_l = [[l.timestamp, l.value] for l in DeviceLight.objects.filter(uuid=info.uuid).order_by('timestamp')]
+
+        temperature[info.uuid] = temp_t[-10:]
+        humidity[info.uuid] = temp_h[-10:]
+        light[info.uuid] = temp_l[-10:]
     
     sensor_dataset = dict()
     sensor_dataset["Temperature"] = temperature
