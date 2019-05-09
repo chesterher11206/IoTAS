@@ -1,5 +1,4 @@
 #!/bin/bash
 
-source env/bin/activate
-python manage.py migrate
+source ./env/bin/activate
 python manage.py runserver 0.0.0.0:8080
