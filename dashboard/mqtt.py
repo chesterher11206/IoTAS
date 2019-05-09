@@ -18,68 +18,77 @@ def on_publish(client, userdata, mid):
 def on_message(client, userdata, msg):
     # Do something
     from .models import DeviceInfo, DeviceTemperature, DeviceHumidity, DeviceLight
-    topic_r = str(msg.topic)
-    msg_r = str(msg.payload)
-    msg_r = msg_r[2:-1]
-    info_set = msg_r.split(",")
-    uuid = info_set[0]
+    topic = msg.topic
+    message = json.loads(msg.payload.decode("utf-8"))
+    print(message)
+    uuid = message.get('uuid', '')
     device_exist = DeviceInfo.objects.filter(uuid=uuid)
 
-    if topic_r == "device/connect/info":
+    if topic == "device/connect/info":
         if not device_exist:
             device = DeviceInfo()
-            device.uuid = uuid
-            device.host = info_set[2]
-            device.os_name = info_set[3]
-            device.save()
+            device.conti = message['conti']
+            device.freq_dht = message['freq_dht']
+            device.freq_light = message['freq_light']
         else:
-            device_exist = device_exist[0]
-            device_exist.online = True
-            device_exist.save()
-            print ("Connect!")
-    elif topic_r == "device/disconnect/uuid":
+            device = device_exist[0]
+            device.online = True
+            device.connected = True
+        
+        device.uuid = uuid
+        device.host = message['host']
+        device.os_name = message['os_name']
+        device.public_ip = message['public_ip']
+        device.private_ip = message['private_ip']
+        device.version = message['version']
+        device.save()
+    elif topic == "device/disconnect/uuid":
+        print("Disconnect!")
         if device_exist:
             device_exist = device_exist[0]
             device_exist.online = False
+            device_exist.connected = False
             device_exist.save()
-    elif topic_r == "device/connect/sensor/DHT":
+    elif topic == "device/connect/sensor/DHT":
         if device_exist:
+            print("DHT")
             temperature = DeviceTemperature()
             temperature.uuid = uuid
-            temperature.value = float(info_set[2])
-            temperature.timestamp = info_set[3]
+            temperature.value = float(message['temperature'])
+            temperature.timestamp = message['time']
 
             humidity = DeviceHumidity()
             humidity.uuid = uuid
-            humidity.value = float(info_set[1])
-            humidity.timestamp = info_set[3]
+            humidity.value = float(message['humidity'])
+            humidity.timestamp = message['time']
 
             temperature.save()
             humidity.save()
-            print ("success dht")
-    elif topic_r == "device/connect/sensor/light":
+    elif topic == "device/connect/sensor/light":
         if device_exist:
+            print("Light")
             light = DeviceLight()
             light.uuid = uuid
-            light.value = float(info_set[1])
-            light.timestamp = info_set[2]
+            light.value = float(message['light'])
+            light.timestamp = message['time']
             light.save()
-            print ("success light")
-    elif topic_r == "device/search/info":
-        print (msg_r)
+    elif topic == "device/search/info":
         find_device = True
         if device_exist:
             device_exist = device_exist[0]
-            if device_exist.online:
+            if device_exist.connected:
                 find_device = False
+            else:
+                device_exist.online = True
+                device_exist.save()
         if find_device:
             room_group_name = 'display_search'
             channel_layer = get_channel_layer()
             info_dict = dict()
             info_dict['message'] = "Find Device"
             info_dict['uuid'] = uuid
-            info_dict['host'] = info_set[2]
-            info_dict['os_name'] = info_set[3]
+            info_dict['host'] = message['host']
+            info_dict['os_name'] = message['os_name']
             info_json = json.dumps(info_dict)
             async_to_sync(channel_layer.group_send)(
                 room_group_name,
@@ -88,6 +97,14 @@ def on_message(client, userdata, msg):
                     'message': info_json
                 }
             )
+    elif topic == "device/set/success":
+        if device_exist:
+            device_exist = device_exist[0]
+            device_exist.conti = message['conti']
+            device_exist.freq_dht = message['freq_dht']
+            device_exist.freq_light = message['freq_light']
+            device_exist.save()
+            print("Set Success!")
 
 client = mqtt.Client()
 client.on_connect = on_connect

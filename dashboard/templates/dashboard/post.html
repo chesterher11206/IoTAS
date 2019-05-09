@@ -187,7 +187,7 @@
                                         <img src="{% static 'images/fox.png' %}" class="head_photo">
                                     </div>
                                     {% if request.user.is_superuser %}
-                                        <div class="col-12 col-lg-9 device_info_area">
+                                        <div class="col-12 col-lg-10 device_info_area">
                                             <p class="device-title">{{ info.uuid }}</p>
                                             <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
                                         </div>
@@ -198,9 +198,6 @@
                                         </div>
                                     {% endif %}
                                     {% if request.user.is_superuser %}
-                                        <div class="col-12 col-lg-1 device_action_area">
-                                            <a class="device_add btn btn-default" id="{{ info.uuid }}_add" href="#"><img src="{% static 'images/add.png' %} " class="action_icon"></a>
-                                        </div>
                                         <div class="col-12 col-lg-1 device_action_area">
                                             <a class="device_delete btn btn-default" id="{{ info.uuid }}_delete" href="#"><img src="{% static 'images/delete.png' %} " class="action_icon"></a>
                                         </div>
@@ -409,7 +406,7 @@
             var data = JSON.parse(e.data);
             var info = data['message'];
             if (info['message'] == 'Display Data') {
-                if (info['online']) {
+                if (info['connected']) {
                     if (document.getElementById(info['uuid'] + '_offline')) {
                         document.getElementById(info['uuid'] + '_offline').remove();
                     }
@@ -470,7 +467,7 @@
             else {
                 if (status == "online") {
                     var infoDiv = document.createElement("DIV");
-                    infoDiv.setAttribute('class', 'col-12 col-lg-9 device_info_area');
+                    infoDiv.setAttribute('class', 'col-12 col-lg-10 device_info_area');
                     var deviceUuid = document.createElement("p");
                     deviceUuid.setAttribute('class', 'device-title');
                     deviceUuid.innerHTML = info['uuid'];
@@ -479,17 +476,6 @@
                     deviceInfo.innerHTML = info['host'] + "|" + info['os_name'];
                     infoDiv.appendChild(deviceUuid);
                     infoDiv.appendChild(deviceInfo);
-
-                    var addDiv = document.createElement("DIV");
-                    addDiv.setAttribute('class', 'col-12 col-lg-1 device_action_area');
-                    var addImage = document.createElement("IMG");
-                    var addLink = document.createElement("a");
-                    addImage.setAttribute('class', "action_icon");
-                    addImage.setAttribute('src', "{% static 'images/add.png' %}");
-                    addLink.setAttribute('class', 'device_add btn btn-default');
-                    addLink.setAttribute('id', info['uuid'] + '_add');
-                    addLink.appendChild(addImage);
-                    addDiv.appendChild(addLink);
 
                     var deleteDiv = document.createElement("DIV");
                     deleteDiv.setAttribute('class', 'col-12 col-lg-1 device_action_area');
@@ -504,7 +490,6 @@
 
                     myDiv.appendChild(headPhotoDiv);
                     myDiv.appendChild(infoDiv);
-                    myDiv.appendChild(addDiv);
                     myDiv.appendChild(deleteDiv);
                 }
                 else if (status == "search") {
@@ -731,7 +716,15 @@
             var new_data = {x: ts, y: value};
             if (!window.SensorChartList[sensor_name].data.datasets[index].data.some(e => e.x == ts)) {
                 window.SensorChartList[sensor_name].data.datasets[index].data.push(new_data);
-                window.SensorChartList[sensor_name].data.datasets[index].data.shift();
+                if (window.SensorChartList[sensor_name].data.datasets[index].data.length > 10) {
+                    window.SensorChartList[sensor_name].data.datasets[index].data.shift();
+                }
+                else {
+                    for (var i = 0; i < window.SensorChartList[sensor_name].data.datasets.length; i++) {
+                        if (i != index) {}
+                            window.SensorChartList[sensor_name].data.datasets[i].data.shift();
+                    }
+                }
                 window.SensorChartList[sensor_name].update();
                 chart_resize();
             }
@@ -872,22 +865,8 @@
             }
         });
 
-        $('.device_add').on('click touchstart', function(event) {
-            var documentClick = false;
-            if (event.type == "click") {
-                documentClick = true;
-            }
-            if (documentClick){
-                var device_uuid = event.currentTarget.id.replace('_add', '');
-                var msg = {"message": "Add Device", 'uuid': device_uuid};
-                console.log(msg)
-                displayInfoSocket.send(JSON.stringify({
-                    'message': msg,
-                }));
-            }
-        });
-
         $(document).on("click", ".device_allow", function(event){
+            console.log("device allow");
             var documentClick = false;
             if (event.type == "click") {
                 documentClick = true;

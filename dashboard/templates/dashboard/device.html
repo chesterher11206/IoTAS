@@ -1,0 +1,535 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Device</h1>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+            <!-- Earnings (Monthly) Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                        <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                        </div>
+                        <div class="col">
+                            <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+            <!-- Pending Requests Card Example -->
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- Content Row -->
+
+        <div class="row">
+
+            <!-- Area Chart -->
+            {% for device, info in device_info.items %}
+                {% if request.user.is_superuser %}
+                    <div class="modal fade" id="settingmodal_{{ device }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Setting Device</h5>
+                                    <button class="close stop_search" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-3 pr-0">
+                                            <p class="device-title">Continuous</p>
+                                        </div>
+                                        <div class="col-12 col-lg-9">
+                                            {% if info.setting.continuous %}
+                                                <input type="checkbox" id="{{ device }}_setconti" name="conti" onchange="conti_check(this)" checked>
+                                            {% else %}
+                                                <input type="checkbox" id="{{ device }}_setconti" name="conti" onchange="conti_check(this)">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-3 pr-0">
+                                            <p class="device-title">DHT Frequence</p>
+                                        </div>
+                                        <div class="col-12 col-lg-9">
+                                            {% if info.setting.continuous %}
+                                                <input type="text" id="{{ device }}_setfreqdht" name="freq_dht" value="{{ info.setting.dht_frequence }}">
+                                            {% else %}
+                                                <input type="text" id="{{ device }}_setfreqdht" name="freq_dht" readonly>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-3 pr-0">
+                                            <p class="device-title">Light Frequence</p>
+                                        </div>
+                                        <div class="col-12 col-lg-9">
+                                            {% if info.setting.continuous %}
+                                                <input type="text" id="{{ device }}_setfreqlight" name="freq_light" value="{{ info.setting.light_frequence }}">
+                                            {% else %}
+                                                <input type="text" id="{{ device }}_setfreqlight" name="freq_light" readonly>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary submit_setting" id="{{ device }}_setting" type="button" data-dismiss="modal">Submit</button>
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <!-- <a class="btn btn-primary" href="{% url 'log_out' %}">Logout</a> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="upgrademodal_{{ device }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Are You Sure To Upgrade The Device?</h5>
+                                    <button class="close stop_search" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>You are going to upgrade the device</p>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-2 pr-0">
+                                            <p class="device-title">UUID: </p>
+                                        </div>
+                                        <div class="col-12 col-lg-10 p-0">
+                                            <p class="device-info">{{ info.info.uuid }}</p>    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary submit_upgrade" id="{{ device }}_upgrade" type="button" data-dismiss="modal">Yes</button>
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                                <!-- <a class="btn btn-primary" href="{% url 'log_out' %}">Logout</a> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% for device, info in device_info.items %}
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">{{ device }} <p class="m-0" id="version_{{ device }}">VERSION {{ info.ver.version }}</p></h6>
+                            {% if request.user.is_superuser %}
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header"><a href="#" data-toggle="modal" data-target="#settingmodal_{{ device }}">Setting</a></div>
+                                        <div class="dropdown-header"><a href="#" data-toggle="modal" data-target="#upgrademodal_{{ device }}">Upgrade</a></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="post">
+                                <div class="col-12 col-lg-6 device_info_area p-0">
+                                    {% for name, value in info.info.items %}
+                                        <div class="row">
+                                            <div class="col-12 col-lg-2 pr-0">
+                                                <p class="device-title">{{ name|upper }}: </p>
+                                            </div>
+                                            <div class="col-12 col-lg-10 p-0">
+                                                <p class="device-info" id="{{ name }}_{{ device }}">{{ value }}</p>    
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="dropdown-divider"></div>
+                                    {% for name, value in info.setting.items %}
+                                        <div class="row">
+                                            <div class="col-12 col-lg-3">
+                                                <p class="device-title">{{ name|upper }}: </p>
+                                            </div>
+                                            <div class="col-12 col-lg-9 p-0">
+                                                <p class="device-info" id="{{ name }}_{{ device }}">{{ value }}</p>    
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <!-- <p class="device-title">UUID: {{ info.uuid }}</p>
+                                    <p class="device-info">HOST: {{ info.host }}</p>
+                                    <p class="device-info">OS NAME: {{ info.os_name }}</p> -->
+                                </div>
+                                {% for name, value in info.sensor.items %}
+                                    <div class="col-12 col-lg-2 col-md-6">
+                                        <div class="card shadow py-2">
+                                            <div class="card-body py-0 px-3">
+                                                <div class="row no-gutters align-items-center">
+                                                    <!-- <div class="col-lg-3">
+                                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                                    </div> -->
+                                                    <div class="col-lg-12">
+                                                        <div class="{{ name }}-text font-weight-bold text-uppercase">{{ name|capfirst }}</div>
+                                                        <div class="h5 font-weight-bold {{ name }}-value" id="{{ name }}_{{ device }}">{{ value }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Pie Chart -->
+            <!-- <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#online"><h6 class="m-0 font-weight-bold text-primary">Online</h6></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#offline"><h6 class="m-0 font-weight-bold text-primary">Offline</h6></a>
+                    </li>
+                </ul>
+                <div class="card-body device-card tab-content">
+                    <div class="tab-pane fade show active device-list" id="online">
+                        {% for info in infos %}
+                            {% if info.online == True %}
+                                <div class="post" id="{{ info.uuid }}_online">
+                                    <div class="col-12 col-lg-1 device_photo_area">
+                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                    </div>
+                                    {% if request.user.is_superuser %}
+                                        <div class="col-12 col-lg-9 device_info_area">
+                                            <p class="device-title">{{ info.uuid }}</p>
+                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                        </div>
+                                    {% else %}
+                                        <div class="col-12 col-lg-11 device_info_area">
+                                            <p class="device-title">{{ info.uuid }}</p>
+                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                        </div>
+                                    {% endif %}
+                                    {% if request.user.is_superuser %}
+                                        <div class="col-12 col-lg-1 device_action_area">
+                                            <a class="device_add btn btn-default" id="{{ info.uuid }}_add" href="#"><img src="{% static 'images/add.png' %} " class="action_icon"></a>
+                                        </div>
+                                        <div class="col-12 col-lg-1 device_action_area">
+                                            <a class="device_delete btn btn-default" id="{{ info.uuid }}_delete" href="#"><img src="{% static 'images/delete.png' %} " class="action_icon"></a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane fade device-list" id="offline">
+                        {% for info in infos %}
+                            {% if info.online == False %}
+                                <div class="post" id="{{ info.uuid }}_offline">
+                                    <div class="col-12 col-lg-1 device_photo_area">
+                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                    </div>
+                                    <div class="col-12 col-lg-11 device_info_area">
+                                        <p class="device-title">{{ info.uuid }}</p>
+                                        <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div> -->
+                <!-- Card Header - Dropdown -->
+                <!-- <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                    <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                    </div>
+                </div> -->
+                <!-- Card Body -->
+                <!-- <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                    <canvas id="myPieChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-primary"></i> Direct
+                    </span>
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-success"></i> Social
+                    </span>
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-info"></i> Referral
+                    </span>
+                    </div>
+                </div> -->
+                <!-- </div>
+            </div> -->
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        var infoRoomName = "info";
+        var displayInfoSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + infoRoomName + '/');
+        
+        displayInfoSocket.onopen = function open() {
+            console.log('DisplayInfoSocket connection created.');
+        };
+
+        displayInfoSocket.onclose = function(e) {
+            console.error('DisplayInfoSocket closed unexpectedly');
+        };
+
+        displayInfoSocket.onmessage = function(e) {
+            console.log('DisplayInfoSocket get message.');
+            var data = JSON.parse(e.data);
+            var info = data['message'];
+            if (info['message'] == 'Display Data') {
+                for (var key in info) {
+                    var value = "None"
+                    if (key == "conti") {
+                        target_id = "continuous_" + info['uuid'];
+                        value = info[key]
+                    }
+                    else if (key == "freq_dht") {
+                        target_id = "dht_frequence_" + info['uuid'];
+                        value = info[key]
+                    }
+                    else if (key == "freq_light") {
+                        target_id = "light_frequence_" + info['uuid'];
+                        value = info[key]
+                    }
+                    else if (key == "private_ip") {
+                        target_id = key + "_" + info['uuid'];
+                        if (info['connected']) {
+                            value = info[key]
+                        }
+                    }
+                    else if (key == "public_ip") {
+                        target_id = key + "_" + info['uuid'];
+                        if (info['connected']) {
+                            value = info[key]
+                        }
+                    }
+                    else {
+                        target_id = key + "_" + info['uuid'];
+                        value = info[key]
+                    }
+                    console.log(target_id);
+                    console.log(value);
+                    if (document.getElementById(target_id) != null) {
+                        document.getElementById(target_id).innerHTML = value;
+                    }
+                }
+            }
+        };
+
+        if (displayInfoSocket.readyState == WebSocket.OPEN) {
+            displayInfoSocket.onopen();
+        };
+        
+        var setRoomName = "set";
+        var setDeviceSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + setRoomName + '/');
+        
+        setDeviceSocket.onopen = function open() {
+            console.log('SetDeviceSocket connection created.');
+        };
+
+        setDeviceSocket.onclose = function(e) {
+            console.error('SetDeviceSocket closed unexpectedly');
+        };
+
+        setDeviceSocket.onmessage = function(e) {
+            console.log('SetDeviceSocket get message.');
+            // var data = JSON.parse(e.data);
+            // var search = data['message'];
+            // if (search['message'] == 'Find Device') {
+            //     if (!document.getElementById(search['uuid'] + "_search")) {
+            //         updateDeviceStatus(search, 'search');
+            //     }
+            // }
+        };
+
+        if (setDeviceSocket.readyState == WebSocket.OPEN) {
+            setDeviceSocket.onopen();
+        };
+
+        var sensorRoomName = "sensor";
+        var displaySensorSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + sensorRoomName + '/');
+        
+        displaySensorSocket.onopen = function open() {
+            console.log('DisplaySensorSocket connection created.');
+        };
+
+        displaySensorSocket.onclose = function(e) {
+            console.error('DisplaySensorSocket closed unexpectedly');
+        };
+
+        displaySensorSocket.onmessage = function(e) {
+            console.log('DisplaySensorSocket get message.');
+            var data = JSON.parse(e.data);
+            var sensor = data['message'];
+            if (sensor['message'] == "Display Sensor") {
+                updateRealtimeSensor(sensor);
+            }
+        };
+
+        if (displaySensorSocket.readyState == WebSocket.OPEN) {
+            displaySensorSocket.onopen();
+        };
+
+        function updateRealtimeSensor(sensor) {
+            sensor_name = sensor['sensor_name'];
+            uuid = sensor['uuid'];
+            value = sensor['value'];
+            ts = Number(sensor['timestamp']) * 1000;
+
+            target_id = sensor_name.toLowerCase() + '_' + uuid;
+            document.getElementById(target_id).innerHTML = value;
+        }
+
+        function conti_check(checkbox) {
+            dht_id = checkbox.id.replace('_setconti', '') + '_setfreqdht';
+            light_id = checkbox.id.replace('_setconti', '') + '_setfreqlight';
+            console.log(dht_id);
+            if(checkbox.checked == true) {
+                document.getElementById(dht_id).readOnly = false;
+                document.getElementById(light_id).readOnly = false;
+            }
+            else {
+                document.getElementById(dht_id).readOnly = true;
+                document.getElementById(light_id).readOnly = true;
+            }
+        }
+
+        $('.submit_setting').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = event.currentTarget.id.replace('_setting', '');
+                var conti = document.getElementById(device_uuid + "_setconti").checked;
+                var freq_dht = document.getElementById(device_uuid + "_setfreqdht").value;
+                var freq_light = document.getElementById(device_uuid + "_setfreqlight").value;
+                var msg = {"message": "Set Device"};
+                msg.conti = conti;
+                msg.uuid = device_uuid
+                if (conti) {
+                    msg.freq_dht = freq_dht;
+                    msg.freq_light = freq_light;
+                }
+                else {
+                    msg.freq_dht = 0.0;
+                    msg.freq_light = 0.0;
+                }
+                setDeviceSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('.submit_upgrade').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = event.currentTarget.id.replace('_upgrade', '');
+                var msg = {"message": "Upgrade Device"};
+                msg.uuid = device_uuid
+                setDeviceSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+    </script>
+{% endblock script %}

@@ -16,7 +16,14 @@ class DeviceInfo(BaseModel):
     host = models.CharField(verbose_name='host', default='', max_length=50)
     uuid = models.CharField(verbose_name='uuid', default='', max_length=50, unique=True)
     os_name = models.CharField(verbose_name='os_name', default='', max_length=50)
+    public_ip = models.CharField(verbose_name='public_ip', default='', max_length=50)
+    private_ip = models.CharField(verbose_name='private_ip', default='', max_length=50)
+    conti = models.BooleanField(verbose_name='conti', default=True)
+    freq_dht = models.FloatField(verbose_name='freq_dht', default=2.0)
+    freq_light = models.FloatField(verbose_name='freq_dht', default=2.0)
+    version = models.CharField(verbose_name='version', default='1.0', max_length=50)
     online = models.BooleanField(default=True)
+    connected = models.BooleanField(default=True)
     published_time = models.DateTimeField(auto_now=True)
 
     class Meta:
