@@ -474,6 +474,42 @@ header {
     height: 400px;
 }
 
+div#location_display {
+    position: relative;
+    height: 500px;
+    width: 100%;
+}
+
+.class_map {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.device_point {
+    /* position: absolute; */
+    /* top: 100px;
+    left: 745px; */
+    width: 10px;
+    height: 10px;
+    background: red;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.device_location_point {
+    position: absolute;
+    top: 100px;
+    left: 745px;
+    width: 10px;
+    height: 10px;
+    background: red;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
 .post {
     display: flex;
     width: 100%;

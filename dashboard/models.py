@@ -60,4 +60,16 @@ class DeviceLight(BaseModel):
         verbose_name = 'Light'
         verbose_name_plural = verbose_name
 
+class DeviceLocation(BaseModel):
+    uuid = models.CharField(verbose_name='uuid', default='', max_length=50)
+    location_x = models.FloatField(verbose_name = 'location_x', null=True, blank=True)
+    location_y = models.FloatField(verbose_name = 'location_y', null=True, blank=True)
+    location_z = models.FloatField(verbose_name = 'location_z', null=True, blank=True)
+    timestamp = models.CharField(verbose_name='locate_time', default='', max_length=10)
+    published_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Location'
+        verbose_name_plural = verbose_name
+
 # Create your models here.

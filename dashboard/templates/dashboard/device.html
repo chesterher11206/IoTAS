@@ -467,13 +467,15 @@
         };
 
         function updateRealtimeSensor(sensor) {
-            sensor_name = sensor['sensor_name'];
-            uuid = sensor['uuid'];
-            value = sensor['value'];
-            ts = Number(sensor['timestamp']) * 1000;
+            var sensor_name = sensor['sensor_name'];
+            var uuid = sensor['uuid'];
+            var value = sensor['value'];
+            var ts = Number(sensor['timestamp']) * 1000;
 
-            target_id = sensor_name.toLowerCase() + '_' + uuid;
-            document.getElementById(target_id).innerHTML = value;
+            var target_id = sensor_name.toLowerCase() + '_' + uuid;
+            if (document.getElementById(target_id) != null) {
+                document.getElementById(target_id).innerHTML = value;
+            }
         }
 
         function conti_check(checkbox) {

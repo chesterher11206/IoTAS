@@ -17,7 +17,7 @@ def on_publish(client, userdata, mid):
 
 def on_message(client, userdata, msg):
     # Do something
-    from .models import DeviceInfo, DeviceTemperature, DeviceHumidity, DeviceLight
+    from .models import DeviceInfo, DeviceTemperature, DeviceHumidity, DeviceLight, DeviceLocation
     topic = msg.topic
     message = json.loads(msg.payload.decode("utf-8"))
     print(message)
@@ -105,6 +105,16 @@ def on_message(client, userdata, msg):
             device_exist.freq_light = message['freq_light']
             device_exist.save()
             print("Set Success!")
+    elif topic == "device/locate/info":
+        if device_exist:
+            print("Location")
+            location = DeviceLocation()
+            location.uuid = uuid
+            location.location_x = float(message['locationX'])
+            location.location_y = float(message['locationY'])
+            location.location_z = float(message['locationZ'])
+            location.timestamp = message['time']
+            location.save()
 
 client = mqtt.Client()
 client.on_connect = on_connect

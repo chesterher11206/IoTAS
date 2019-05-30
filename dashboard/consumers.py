@@ -40,6 +40,8 @@ class DisplayConsumer(AsyncWebsocketConsumer):
             type_name = 'set_device'
         elif message['message'] == "Upgrade Device":
             type_name = 'upgrade_device'
+        elif message['message'] == "Locate Device":
+            type_name = 'locate_device'
 
         if type_name:
             await self.channel_layer.group_send(
@@ -147,6 +149,14 @@ class DisplayConsumer(AsyncWebsocketConsumer):
             # info = "Allow Device " + msg_json['uuid']
             from .mqtt import pub_client
             pub_client.publish("server/upgrade/device", payload=json.dumps(msg_json), qos=0)
+
+    async def locate_device(self, event):
+        print("LOCATE DEVICE")
+        msg_json = event['message']
+        from .mqtt import pub_client
+        pub_client.publish("server/locate/device", payload=json.dumps(msg_json), qos=0)
+
+
 
 
 class SearchConsumer(AsyncWebsocketConsumer):
