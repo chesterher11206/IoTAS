@@ -486,6 +486,18 @@ div#location_display {
     left: 0px;
 }
 
+div#guide_display {
+    position: relative;
+    height: 100%;
+    width: 1000px;
+}
+
+.guide_map {
+    width: 1000px;
+    top: 0px;
+    left: 0px;
+}
+
 .device_point {
     /* position: absolute; */
     /* top: 100px;

@@ -42,6 +42,8 @@ class DisplayConsumer(AsyncWebsocketConsumer):
             type_name = 'upgrade_device'
         elif message['message'] == "Locate Device":
             type_name = 'locate_device'
+        elif message['message'] == "Guide Device":
+            type_name = 'guide_device'
 
         if type_name:
             await self.channel_layer.group_send(
@@ -156,7 +158,14 @@ class DisplayConsumer(AsyncWebsocketConsumer):
         from .mqtt import pub_client
         pub_client.publish("server/locate/device", payload=json.dumps(msg_json), qos=0)
 
-
+    async def guide_device(self, event):
+        msg_json = event['message']
+        # if isinstance(msg_json, str):
+        #     msg_json = json.loads(msg_json)
+        # print ("search", msg_json)
+        # info = msg_json['message']
+        from .mqtt import pub_client
+        pub_client.publish("server/guide/device", payload=json.dumps(msg_json), qos=0)
 
 
 class SearchConsumer(AsyncWebsocketConsumer):

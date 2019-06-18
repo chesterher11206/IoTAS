@@ -116,150 +116,150 @@
 
         <div class="row">
 
-        <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Select Sensor:</div>
-                        <!-- {% for info in infos %}
-                            <a class="dropdown-item" href="#">{{ info.uuid }}</a>
-                        {% endfor %} -->
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Select Sensor:</div>
+                                <!-- {% for info in infos %}
+                                    <a class="dropdown-item" href="#">{{ info.uuid }}</a>
+                                {% endfor %} -->
+                                    {% for sensor_name in sensor_list %}
+                                        <a class="dropdown-item dropdown-sensor" href="#">{{ sensor_name }}</a>
+                                    {% endfor %}
+                                <!-- <a class="dropdown-item" href="#">Temperature</a>
+                                <a class="dropdown-item" href="#">Humidity</a> -->
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-header">Select Device:</div>
+                                    {% for info in infos %}
+                                        <a class="dropdown-item active-display-device dropdown-device" href="#">{{ info.uuid }}</a>
+                                    {% endfor %}
+                                <!-- <a class="dropdown-item" href="#">Light</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body device-card">
+                        <div class="chart-area">
+                            <!-- <canvas id="TemperatureChart" class="active-sensor-chart"></canvas>
+                            <canvas id="HumidityChart" class="sensor-chart"></canvas>
+                            <canvas id="LightChart" class="sensor-chart"></canvas> -->
                             {% for sensor_name in sensor_list %}
-                                <a class="dropdown-item dropdown-sensor" href="#">{{ sensor_name }}</a>
+                                <!-- <div class="sensorChartWrapper"> -->
+                                    {% if forloop.first %} 
+                                        <canvas id="{{ sensor_name }}_SensorChart" class="active-sensor-chart"></canvas>
+                                    {% else %}
+                                        <canvas id="{{ sensor_name }}_SensorChart" class="sensor-chart"></canvas>
+                                    {% endif %}
+                                <!-- </div> -->
                             {% endfor %}
-                        <!-- <a class="dropdown-item" href="#">Temperature</a>
-                        <a class="dropdown-item" href="#">Humidity</a> -->
-                        <div class="dropdown-divider"></div>
-                        <div class="dropdown-header">Select Device:</div>
-                            {% for info in infos %}
-                                <a class="dropdown-item active-display-device dropdown-device" href="#">{{ info.uuid }}</a>
-                            {% endfor %}
-                        <!-- <a class="dropdown-item" href="#">Light</a> -->
+                        <!-- <canvas id="myAreaChart"></canvas> -->
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Card Body -->
-            <div class="card-body device-card">
-                <div class="chart-area">
-                    <!-- <canvas id="TemperatureChart" class="active-sensor-chart"></canvas>
-                    <canvas id="HumidityChart" class="sensor-chart"></canvas>
-                    <canvas id="LightChart" class="sensor-chart"></canvas> -->
-                    {% for sensor_name in sensor_list %}
-                        <!-- <div class="sensorChartWrapper"> -->
-                            {% if forloop.first %} 
-                                <canvas id="{{ sensor_name }}_SensorChart" class="active-sensor-chart"></canvas>
-                            {% else %}
-                                <canvas id="{{ sensor_name }}_SensorChart" class="sensor-chart"></canvas>
-                            {% endif %}
-                        <!-- </div> -->
-                    {% endfor %}
-                <!-- <canvas id="myAreaChart"></canvas> -->
-                </div>
-            </div>
-            </div>
-        </div>
 
-        <!-- Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#online"><h6 class="m-0 font-weight-bold text-primary">Online</h6></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#offline"><h6 class="m-0 font-weight-bold text-primary">Offline</h6></a>
-                </li>
-            </ul>
-            <div class="card-body device-card tab-content">
-                <div class="tab-pane fade show active device-list" id="online">
-                    <!-- <div> -->
-                        {% for info in infos %}
-                            {% if info.online == True %}
-                                <div class="post" id="{{ info.uuid }}_online">
-                                    <div class="col-12 col-lg-1 device_photo_area">
-                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
-                                    </div>
-                                    {% if request.user.is_superuser %}
-                                        <div class="col-12 col-lg-10 device_info_area">
-                                            <p class="device-title">{{ info.uuid }}</p>
-                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
-                                        </div>
-                                    {% else %}
-                                        <div class="col-12 col-lg-11 device_info_area">
-                                            <p class="device-title">{{ info.uuid }}</p>
-                                            <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+            <!-- Pie Chart -->
+            <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#online"><h6 class="m-0 font-weight-bold text-primary">Online</h6></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#offline"><h6 class="m-0 font-weight-bold text-primary">Offline</h6></a>
+                        </li>
+                    </ul>
+                    <div class="card-body device-card tab-content">
+                        <div class="tab-pane fade show active device-list" id="online">
+                            <!-- <div> -->
+                                {% for info in infos %}
+                                    {% if info.online == True %}
+                                        <div class="post" id="{{ info.uuid }}_online">
+                                            <div class="col-12 col-lg-1 device_photo_area">
+                                                <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                            </div>
+                                            {% if request.user.is_superuser %}
+                                                <div class="col-12 col-lg-10 device_info_area">
+                                                    <p class="device-title">{{ info.uuid }}</p>
+                                                    <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                                </div>
+                                            {% else %}
+                                                <div class="col-12 col-lg-11 device_info_area">
+                                                    <p class="device-title">{{ info.uuid }}</p>
+                                                    <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                                </div>
+                                            {% endif %}
+                                            {% if request.user.is_superuser %}
+                                                <div class="col-12 col-lg-1 device_action_area">
+                                                    <a class="device_delete btn btn-default" id="{{ info.uuid }}_delete" href="#"><img src="{% static 'images/delete.png' %} " class="action_icon"></a>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     {% endif %}
-                                    {% if request.user.is_superuser %}
-                                        <div class="col-12 col-lg-1 device_action_area">
-                                            <a class="device_delete btn btn-default" id="{{ info.uuid }}_delete" href="#"><img src="{% static 'images/delete.png' %} " class="action_icon"></a>
+                                {% endfor %}
+                            <!-- </div> -->
+                        </div>
+                        <div class="tab-pane fade device-list" id="offline">
+                            <!-- <div> -->
+                                {% for info in infos %}
+                                    {% if info.online == False %}
+                                        <div class="post" id="{{ info.uuid }}_offline">
+                                            <div class="col-12 col-lg-1 device_photo_area">
+                                                <img src="{% static 'images/fox.png' %}" class="head_photo">
+                                            </div>
+                                            <div class="col-12 col-lg-11 device_info_area">
+                                                <p class="device-title">{{ info.uuid }}</p>
+                                                <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
+                                            </div>
                                         </div>
                                     {% endif %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    <!-- </div> -->
-                </div>
-                <div class="tab-pane fade device-list" id="offline">
-                    <!-- <div> -->
-                        {% for info in infos %}
-                            {% if info.online == False %}
-                                <div class="post" id="{{ info.uuid }}_offline">
-                                    <div class="col-12 col-lg-1 device_photo_area">
-                                        <img src="{% static 'images/fox.png' %}" class="head_photo">
-                                    </div>
-                                    <div class="col-12 col-lg-11 device_info_area">
-                                        <p class="device-title">{{ info.uuid }}</p>
-                                        <p class="device-info">{{ info.host }} | {{ info.os_name }}</p>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    <!-- </div> -->
+                                {% endfor %}
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <!-- Card Header - Dropdown -->
+                    <!-- <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                        <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                        </div>
+                    </div> -->
+                    <!-- Card Body -->
+                    <!-- <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2">
+                        <canvas id="myPieChart"></canvas>
+                        </div>
+                        <div class="mt-4 text-center small">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Direct
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i> Social
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i> Referral
+                        </span>
+                        </div>
+                    </div> -->
                 </div>
             </div>
-            <!-- Card Header - Dropdown -->
-            <!-- <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                <div class="dropdown no-arrow">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                    <div class="dropdown-header">Dropdown Header:</div>
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-                </div>
-            </div> -->
-            <!-- Card Body -->
-            <!-- <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
-                <canvas id="myPieChart"></canvas>
-                </div>
-                <div class="mt-4 text-center small">
-                <span class="mr-2">
-                    <i class="fas fa-circle text-primary"></i> Direct
-                </span>
-                <span class="mr-2">
-                    <i class="fas fa-circle text-success"></i> Social
-                </span>
-                <span class="mr-2">
-                    <i class="fas fa-circle text-info"></i> Referral
-                </span>
-                </div>
-            </div> -->
-            </div>
-        </div>
         </div>
 
         <!-- Content Row -->
@@ -283,6 +283,96 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Guide Device</h6>
+                        {% if request.user.is_superuser %}
+                            <div class="modal fade" id="guidingmodal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Guiding Device</h5>
+                                            <button class="close stop_search" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-3 pr-0">
+                                                    <p class="device-title">Device</p>
+                                                </div>
+                                                <div class="col-12 col-lg-9" id="guide_device_list">
+                                                    {% for info in infos %}
+                                                        {% if info.online == True %}
+                                                            <input type="radio" value="guide_{{ info.uuid }}" name="guidedevice">
+                                                            <label for="guide_{{ info.uuid }}"><span></span><p class="device-title">{{ info.uuid }}</p></label>
+                                                            <br>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <!-- {% if info.setting.continuous %}
+                                                        <input type="checkbox" id="{{ device }}_setconti" name="conti" onchange="conti_check(this)" checked>
+                                                    {% else %}
+                                                        <input type="checkbox" id="{{ device }}_setconti" name="conti" onchange="conti_check(this)">
+                                                    {% endif %} -->
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-3 pr-0">
+                                                    <p class="device-title">Color</p>
+                                                </div>
+                                                <div class="col-12 col-lg-9">
+                                                    <input type="text" id="setguidecolor" name="color">
+                                                    <!-- {% if info.setting.continuous %}
+                                                        <input type="text" id="{{ device }}_setfreqdht" name="freq_dht" value="{{ info.setting.dht_frequence }}">
+                                                    {% else %}
+                                                        <input type="text" id="{{ device }}_setfreqdht" name="freq_dht" readonly>
+                                                    {% endif %} -->
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-3 pr-0">
+                                                    <p class="device-title">Station</p>
+                                                </div>
+                                                <div class="col-12 col-lg-9">
+                                                    <input type="text" id="setguidestation" name="station">
+                                                    <!-- {% if info.setting.continuous %}
+                                                        <input type="text" id="{{ device }}_setfreqlight" name="freq_light" value="{{ info.setting.light_frequence }}">
+                                                    {% else %}
+                                                        <input type="text" id="{{ device }}_setfreqlight" name="freq_light" readonly>
+                                                    {% endif %} -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary submit_guide" type="button" data-dismiss="modal">Start</button>
+                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                        <!-- <a class="btn btn-primary" href="{% url 'log_out' %}">Logout</a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#guidingmodal">Guide</a>
+                        {% endif %}
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-10 col-lg-9" id="guide_display">
+                                <img src="{% static 'images/guide.png' %}" class="guide_map">
+                            </div>
+                            <div class="col-xl-2 col-lg-3 p-0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Content Column -->
         <!-- <div class="col-lg-6 mb-4"> -->
@@ -398,7 +488,6 @@
             </div>
 
         </div> -->
-        </div>
 
     </div>
 {% endblock content %}
@@ -872,6 +961,34 @@
             }
         }
 
+        // Guide Device
+        var guideRoomName = "guide";
+        var guideDeviceSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/display/' + searchRoomName + '/');
+        
+        guideDeviceSocket.onopen = function open() {
+            console.log('GuideDeviceSocket connection created.');
+        };
+
+        guideDeviceSocket.onclose = function(e) {
+            console.error('GuideDeviceSocket closed unexpectedly');
+        };
+
+        // guideDeviceSocket.onmessage = function(e) {
+        //     console.log('GuideDeviceSocket get message.');
+        //     var data = JSON.parse(e.data);
+        //     var search = data['message'];
+        //     if (search['message'] == 'Find Device') {
+        //         if (!document.getElementById(search['uuid'] + "_search")) {
+        //             updateDeviceStatus(search, 'search');
+        //         }
+        //     }
+        // };
+
+        if (guideDeviceSocket.readyState == WebSocket.OPEN) {
+            guideDeviceSocket.onopen();
+        };
+
         // Select Display Sensor
         $('a.dropdown-sensor').on('click touchstart', function(event) {
             var documentClick = false;
@@ -951,20 +1068,6 @@
             }
         });
 
-        $('a#locate_device_button').on('click touchstart', function(event) {
-            event.preventDefault();
-            var documentClick = false;
-            if (event.type == "click") {
-                documentClick = true;
-            }
-            if (documentClick){
-                var msg = {"message": "Locate Device"};
-                displayLocationSocket.send(JSON.stringify({
-                    'message': msg
-                }));
-            }
-        });
-
         $('.stop_search').on('click touchstart', function(event) {
             var documentClick = false;
             if (event.type == "click") {
@@ -1004,6 +1107,40 @@
                 console.log(device_uuid);
                 var msg = {"message": "Allow Device", 'uuid': device_uuid};
                 displayInfoSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('a#locate_device_button').on('click touchstart', function(event) {
+            event.preventDefault();
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var msg = {"message": "Locate Device"};
+                displayLocationSocket.send(JSON.stringify({
+                    'message': msg
+                }));
+            }
+        });
+
+        $('.submit_guide').on('click touchstart', function(event) {
+            var documentClick = false;
+            if (event.type == "click") {
+                documentClick = true;
+            }
+            if (documentClick){
+                var device_uuid = document.querySelector('input[name="guidedevice"]:checked').value.replace('guide_', '');
+                var color = document.getElementById("setguidecolor").value;
+                var station = document.getElementById("setguidestation").value;
+                var msg = {"message": "Guide Device"};
+                msg.uuid = device_uuid;
+                msg.color = color;
+                msg.station = station;
+                console.log(msg);
+                guideDeviceSocket.send(JSON.stringify({
                     'message': msg
                 }));
             }
