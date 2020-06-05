@@ -11,7 +11,7 @@ channels-redis==2.3.3
 chardet==3.0.4
 constantly==15.1.0
 daphne==2.3.0
-Django==2.2
+Django==2.2.13
 future==0.17.1
 hiredis==1.0.0
 hyperlink==19.0.0
